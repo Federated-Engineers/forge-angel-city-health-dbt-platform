@@ -1,0 +1,38 @@
+name: Build Docker image, Publish to ECR & Update ECS Task Definition
+on:
+  workflow_dispatch:
+    inputs:
+      aws_account_id:
+        description: AWS Account ID
+        type: string
+      aws_region:
+        description: Target AWS Region
+        default: "eu-central-1"
+        type: string
+      github_iam_role:
+        description: Name of the IAM Role for OIDC auth to AWS
+        type: string
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+
+    # https://docs.github.com/en/actions/how-tos/secure-your-work/security-harden-deployments/oidc-in-aws#adding-permissions-settings
+    permissions:
+      id-token: write # This is required for requesting the JWT
+      contents: read # This is required for actions/checkout
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v6.0.2
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v6.1.1
+        with:
+          role-to-assume: arn:aws:iam::${{ inputs.aws_account_id }}:role/${{ inputs.github_iam_role }}
+          role-session-name: Github-Actions-Session
+          aws-region: ${{ inputs.aws_region }}
+          output-credentials: true
+      - name: Get Caller Identity
+        run: |
+          aws sts get-caller-identity
