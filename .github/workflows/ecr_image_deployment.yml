@@ -14,7 +14,7 @@ on:
         type: string
 
 jobs:
-  docker:
+  ECR_DBT_Deployment:
     runs-on: ubuntu-latest
 
     # https://docs.github.com/en/actions/how-tos/secure-your-work/security-harden-deployments/oidc-in-aws#adding-permissions-settings
@@ -33,6 +33,22 @@ jobs:
           role-session-name: Github-Actions-Session
           aws-region: ${{ inputs.aws_region }}
           output-credentials: true
+
       - name: Get Caller Identity
         run: |
           aws sts get-caller-identity
+      
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build, tag, and push image to Amazon ECR
+        id: build-publish
+        shell: bash
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: "achs/dbt-core"
+          ECR_IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker buildx build -t $ECR_REGISTRY/$ECR_REPOSITORY:$ECR_IMAGE_TAG -f Dockerfile .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$ECR_IMAGE_TAG
