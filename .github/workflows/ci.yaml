@@ -1,8 +1,7 @@
 # Workflow name
 name: CI
 run-name: >-
-  CI ${{ github.event_name }} by @${{ github.actor }}. 
-  Commit Message: ${{ github.event.head_commit.message }}
+  CI ${{ github.event_name }} event by @${{ github.actor }}.
 
 on:
   push:
@@ -26,15 +25,11 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
-
+        uses: actions/checkout@v7.0.1
       - name: Setup Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7.0.0
         with:
           python-version: ${{ env.PYTHON_VERSION }}
           cache: pip
-
-      - name: Install dependencies
-        shell: bash
-        run: |
-          python -m pip install -r requirements-dev.txt
+          cache-dependency-path: |
+            requirements-dev.txt
