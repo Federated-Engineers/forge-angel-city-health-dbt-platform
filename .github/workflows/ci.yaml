@@ -6,7 +6,7 @@ run-name: >-
 
 on:
   push:
-    branches: [main]
+    branches: [main, Temiloluwa/CI-Setup]
   pull_request:
     branches: [main]
   workflow_dispatch:
