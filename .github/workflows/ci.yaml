@@ -33,3 +33,11 @@ jobs:
           cache: pip
           cache-dependency-path: |
             requirements-dev.txt
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements-dev.txt
+      - name: SQLFluff Linting
+        run: |
+          sqlfluff lint --dialect snowflake angel_city_health_systems/models
+      # No Python files in repo, flake8 and isort checks not needed
