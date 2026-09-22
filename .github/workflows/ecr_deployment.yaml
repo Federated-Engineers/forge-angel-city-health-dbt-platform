@@ -1,0 +1,38 @@
+# Workflow name
+name: Deploy DBT to ECR
+run-name: >-
+  DBT Deployment triggered by ${{ github.event_name }} event by @${{ github.actor }}.
+
+on:
+  pull_request:
+    branches:
+      - main
+      - snowflake-infra
+    # paths:
+    #   - 'angel_city_health_systems/**'
+    #   - 'Dockerfile.dbt'
+
+permissions:
+  id-token: write
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  deploy-dbt-to-ecr:
+    name: Build DBT image and deploy to ECR
+    runs-on: ubuntu-24.04
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7.0.1
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v6.3.0
+        with:
+          aws-region: ${{ vars.AWS_REGION }}
+          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+          role-session-name: Github-Actions-DBT-Deployment-Session
+          output-credentials: true
+          mask-aws-account-id: true
+      - name: Get caller identity
+        run: |
+          aws sts get-caller-identity
