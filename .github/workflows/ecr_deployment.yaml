@@ -7,6 +7,8 @@ on:
   pull_request:
     branches:
       - main
+  push:
+    branches:
       - snowflake-infra
     # paths:
     #   - 'angel_city_health_systems/**'
