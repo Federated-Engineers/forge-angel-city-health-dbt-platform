@@ -1,7 +1,7 @@
 # Workflow name
 name: Deploy DBT to ECR
 run-name: >-
-  DBT Deployment triggered by ${{ github.event_name }} event by @${{ github.actor }}.
+  DBT Deployment triggered on ${{ github.event_name }} event by @${{ github.actor }}.
 
 on:
   pull_request:
