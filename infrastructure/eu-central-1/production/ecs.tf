@@ -25,64 +25,47 @@ resource "aws_ecs_cluster_capacity_providers" "dbt_cluster_capacity_providers" {
   }
 }
 
-# resource "aws_ecs_task_definition" "airflow_cluster_task_definition" {
-#   family                   = "airflow-cluster-task-definition"
-#   requires_compatibilities = ["FARGATE"]
-#   cpu                      = "4096"
-#   memory                   = "8192"
-#   network_mode             = "awsvpc"
-#   task_role_arn            = aws_iam_role.airflow_cluster_task_role.arn
-#   execution_role_arn       = aws_iam_role.airflow_cluster_execution_role.arn
-#   pid_mode                 = "task"
+resource "aws_ecs_task_definition" "dbt_core_cluster_task_definition" {
+  family                   = "dbt-core-task-definition"
+  requires_compatibilities = ["FARGATE"]
+  cpu                      = "4096"
+  memory                   = "8192"
+  network_mode             = "awsvpc"
+  task_role_arn            = aws_iam_role.achs_dbt_core_task_role.arn
+  execution_role_arn       = aws_iam_role.achs_dbt_core_ecs_execution_role.arn
+  pid_mode                 = "task"
 
-#   runtime_platform {
-#     operating_system_family = "LINUX"
-#     cpu_architecture        = "X86_64"
-#   }
+  runtime_platform {
+    operating_system_family = "LINUX"
+    cpu_architecture        = "X86_64"
+  }
 
-#   ephemeral_storage {
-#     size_in_gib = 21
-#   }
+  container_definitions = jsonencode([
+    {
+      name      = "dbt-core"
+      essential = false
+      command   = ["dbt", "--help"]
+      image     = "${aws_ecr_repository.achs_dbt_repo.repository_url}:LATEST"
+      cpu       = 4096
+      memory    = 4096
 
-#   container_definitions = jsonencode([
-#     {
-#       name      = "airflow-standalone"
-#       essential = true
-#       command   = ["standalone"]
-#       image     = "${aws_ecr_repository.airflow_repo.repository_url}:latest"
-#       cpu       = 4096
-#       memory    = 4096
+      secrets = [
+        { "name" = "SNOWFLAKE_ORGANIZATION_NAME", "valueFrom" = "${aws_ssm_parameter.snowflake_org_name.arn}" },
+        { "name" = "SNOWFLAKE_ACCOUNT_NAME", "valueFrom" = "${aws_ssm_parameter.snowflake_account_name.arn}" },
+        { "name" = "SNOWFLAKE_USER", "valueFrom" = "${aws_ssm_parameter.snowflake_user.arn}" },
+        { "name" = "SNOWFLAKE_PRIVATE_KEY", "valueFrom" = "${aws_ssm_parameter.snowflake_private_key.arn}" },
+        { "name" = "SNOWFLAKE_ROLE", "valueFrom" = "${aws_ssm_parameter.snowflake_role.arn}" }
+      ]
 
-#       portMappings = [
-#         {
-#           containerPort = 8080
-#           protocol      = "tcp"
-#         }
-#       ]
-
-#       environment = [
-#         { name = "AIRFLOW__API__PORT", value = "8080" },
-#         { name = "AIRFLOW__CORE__EXECUTOR", value = "LocalExecutor" },
-#         { name = "AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION", value = "true" },
-#         { name = "AIRFLOW__SCHEDULER__ENABLE_HEALTH_CHECK", value = "true" }
-#       ]
-
-#       secrets = [
-#         {
-#           "name" : "AIRFLOW__DATABASE__SQL_ALCHEMY_CONN",
-#           "valueFrom" : aws_secretsmanager_secret_version.airflow_meta_db_conn_uri.secret_arn
-#         }
-#       ]
-
-#       logConfiguration = {
-#         logDriver = "awslogs"
-#         options = {
-#           "awslogs-group"         = "/ecs/airflow-cluster/api-standalone"
-#           "awslogs-region"        = "eu-central-1"
-#           "awslogs-stream-prefix" = "ecs"
-#           "awslogs-create-group"  = "true"
-#         }
-#       }
-#     }
-#   ])
-# }
+      logConfiguration = {
+        logDriver = "awslogs"
+        options = {
+          "awslogs-group"         = "/achs/dbt/logs"
+          "awslogs-region"        = "eu-central-1"
+          "awslogs-stream-prefix" = "achs"
+          "awslogs-create-group"  = "true"
+        }
+      }
+    }
+  ])
+}
