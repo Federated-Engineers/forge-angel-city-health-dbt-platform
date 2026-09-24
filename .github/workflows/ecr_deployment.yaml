@@ -38,3 +38,15 @@ jobs:
       - name: Get caller identity
         run: |
           aws sts get-caller-identity
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+      - name: Build, tag, and push image to Amazon ECR
+        id: build-publish
+        shell: bash
+        env:
+          ECR_IMAGE_URI: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ env.ECR_IMAGE_TAG }}
+        run: |
+          docker buildx build -t ${{ env.ECR_IMAGE_URI }} -f Dockerfile .
+          docker push ${{ env.ECR_IMAGE_URI }}
+          echo "ecr_image_uri=${{ env.ECR_IMAGE_URI }}" >> "$GITHUB_OUTPUT"
