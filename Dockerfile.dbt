@@ -1,0 +1,5 @@
+FROM --platform=linux/amd64 ghcr.io/dbt-labs/dbt-core:1.12.4
+
+COPY ./angel_city_health_systems /usr/app
+
+COPY profiles.yml /root/.dbt/profiles.yml

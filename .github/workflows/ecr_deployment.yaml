@@ -45,7 +45,7 @@ jobs:
         id: build-publish
         shell: bash
         env:
-          ECR_IMAGE_URI: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ env.ECR_IMAGE_TAG }}
+          ECR_IMAGE_URI: ${{ steps.login-ecr.outputs.registry }}/${{ vars.ECR_REPOSITORY }}:LATEST
         run: |
           docker buildx build -t ${{ env.ECR_IMAGE_URI }} -f Dockerfile .
           docker push ${{ env.ECR_IMAGE_URI }}
