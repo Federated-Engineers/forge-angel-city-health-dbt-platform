@@ -47,6 +47,6 @@ jobs:
         env:
           ECR_IMAGE_URI: ${{ steps.login-ecr.outputs.registry }}/${{ vars.ECR_REPOSITORY }}:LATEST
         run: |
-          docker buildx build -t ${{ env.ECR_IMAGE_URI }} -f Dockerfile .
+          docker buildx build -t ${{ env.ECR_IMAGE_URI }} -f Dockerfile.dbt .
           docker push ${{ env.ECR_IMAGE_URI }}
           echo "ecr_image_uri=${{ env.ECR_IMAGE_URI }}" >> "$GITHUB_OUTPUT"
