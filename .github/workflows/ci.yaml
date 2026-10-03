@@ -1,0 +1,43 @@
+# Workflow name
+name: CI
+run-name: >-
+  CI ${{ github.event_name }} event by @${{ github.actor }}.
+
+on:
+  push:
+    branches: [main, Temiloluwa/CI-Setup]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  PYTHON_VERSION: 3.14
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  linting-check:
+    name: Linting and Static Checks
+    runs-on: ubuntu-24.04
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7.0.1
+      - name: Setup Python
+        uses: actions/setup-python@v7.0.0
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: |
+            requirements-dev.txt
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements-dev.txt
+      - name: SQLFluff Linting
+        run: |
+          sqlfluff lint --dialect snowflake angel_city_health_systems/models
+      # No Python files in repo, flake8 and isort checks not needed
