@@ -33,3 +33,10 @@ resource "aws_ssm_parameter" "snowflake_private_key" {
   type             = "SecureString"
   description      = "Snowflake Private Key"
 }
+
+resource "aws_ssm_parameter" "snowflake_airflow_user_password" {
+  name             = "/production/forge/achs/snowflake/airflow_user_password"
+  type             = "SecureString"
+  value_wo         = random_password.snowflake_airflow_password.result
+  value_wo_version = 1
+}

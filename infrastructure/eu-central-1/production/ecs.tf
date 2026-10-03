@@ -25,7 +25,7 @@ resource "aws_ecs_cluster_capacity_providers" "dbt_cluster_capacity_providers" {
   }
 }
 
-resource "aws_ecs_task_definition" "dbt_core_cluster_task_definition" {
+resource "aws_ecs_task_definition" "dbt_core_task_definition" {
   family                   = "dbt-core-task-definition"
   requires_compatibilities = ["FARGATE"]
   cpu                      = "4096"
@@ -43,7 +43,7 @@ resource "aws_ecs_task_definition" "dbt_core_cluster_task_definition" {
   container_definitions = jsonencode([
     {
       name      = "dbt-core"
-      essential = false
+      essential = true
       command   = ["dbt", "--help"]
       image     = "${aws_ecr_repository.achs_dbt_repo.repository_url}:LATEST"
       cpu       = 4096

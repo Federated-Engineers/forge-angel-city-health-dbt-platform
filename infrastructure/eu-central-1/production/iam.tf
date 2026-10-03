@@ -1,5 +1,7 @@
 locals {
-  iam_path = "/achs/cd/"
+  iam_path                   = "/achs/cd/"
+  snowflake_path             = "/achs/snowflake"
+  snowflake_integration_path = "/achs/snowflake/storage_integration/"
 }
 
 resource "aws_iam_role" "github_action_oidc_role" {
@@ -178,4 +180,71 @@ resource "aws_iam_policy" "achs_dbt_core_task_role_policy" {
 resource "aws_iam_role_policy_attachment" "attach_achs_dbt_core_task_role_policy" {
   role       = aws_iam_role.achs_dbt_core_task_role.name
   policy_arn = aws_iam_policy.achs_dbt_core_task_role_policy.arn
+}
+
+resource "aws_iam_role" "snowflake_storage_integration_role" {
+  name = "SnowflakeStorageIntegrationRole"
+  path = local.snowflake_integration_path
+  assume_role_policy = jsonencode(
+    {
+      "Version" : "2012-10-17",
+      "Statement" : [
+        {
+          "Sid" : "AllowSnowflakeToAssumeRole",
+          "Effect" : "Allow",
+          "Action" : "sts:AssumeRole",
+          "Principal" : {
+            "AWS" : snowflake_storage_integration_aws.achs_source_data_integration.describe_output[0].iam_user_arn
+          },
+          "Condition" : {
+            "StringEquals" : {
+              "sts:ExternalId" : snowflake_storage_integration_aws.achs_source_data_integration.describe_output[0].external_id
+            }
+          }
+        }
+      ]
+    }
+  )
+}
+
+resource "aws_iam_policy" "snowflake_storage_integration_policy" {
+  name = "SnowflakeStorageIntegrationPolicy"
+  path = local.snowflake_integration_path
+  policy = jsonencode(
+    {
+      "Version" : "2012-10-17",
+      "Statement" : [
+        {
+          "Sid" : "AllowObjectLevelAccess",
+          "Effect" : "Allow",
+          "Action" : [
+            "s3:GetObject",
+            "s3:GetObjectVersion"
+          ],
+          "Resource" : "${data.aws_s3_bucket.achs_data_source_bucket.arn}/achs_data/*"
+        },
+        {
+          "Sid" : "AllowBucketLevelAccess",
+          "Effect" : "Allow",
+          "Action" : [
+            "s3:ListBucket",
+            "s3:GetBucketLocation"
+          ],
+          "Resource" : data.aws_s3_bucket.achs_data_source_bucket.arn,
+          "Condition" : {
+            "StringLike" : {
+              "s3:prefix" : [
+                "achs_data/*"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  )
+}
+
+resource "aws_iam_role_policy_attachment" "attach_snowflake_storage_integration_policy" {
+  role       = aws_iam_role.snowflake_storage_integration_role.name
+  policy_arn = aws_iam_policy.snowflake_storage_integration_policy.arn
 }
