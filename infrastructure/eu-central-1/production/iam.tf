@@ -107,10 +107,10 @@ resource "aws_iam_policy" "achs_dbt_core_ecs_execution_role_policy" {
           "Resource" : "*"
         },
         {
-          "Sid" : "AllowSecretsManagerAccess",
+          "Sid" : "AllowSSMParamaterAccess",
           "Effect" : "Allow",
           "Action" : [
-            "secretsmanager:GetSecretValue"
+            "ssm:GetParameters"
           ],
           "Resource" : "*"
         },
