@@ -49,15 +49,19 @@ resource "aws_ecs_task_definition" "dbt_core_task_definition" {
       cpu       = 4096
       memory    = 4096
 
+      environment : [
+        { "name" : "SNOWFLAKE_DEFAULT_DATABASE", "value" : module.achs_production_database.snowflake_database_name },
+        { "name" : "SNOWFLAKE_DEFAULT_SCHEMA", "value" : module.achs_prod_landing_schema.snowflake_schema_name },
+        { "name" : "SNOWFLAKE_WAREHOUSE", "value" : snowflake_warehouse.achs_warehouse.name }
+      ]
+
+
       secrets = [
         { "name" = "SNOWFLAKE_ORGANIZATION_NAME", "valueFrom" = "${aws_ssm_parameter.snowflake_org_name.arn}" },
         { "name" = "SNOWFLAKE_ACCOUNT_NAME", "valueFrom" = "${aws_ssm_parameter.snowflake_account_name.arn}" },
         { "name" = "SNOWFLAKE_USER", "valueFrom" = "${aws_ssm_parameter.snowflake_dbt_user.arn}" },
         { "name" = "SNOWFLAKE_PASSWORD", "valueFrom" = "${aws_ssm_parameter.snowflake_dbt_user_password.arn}" },
-        { "name" = "SNOWFLAKE_ROLE", "valueFrom" = "${aws_ssm_parameter.snowflake_dbt_role.arn}" },
-        { "name" = "SNOWFLAKE_DEFAULT_DATABASE", "value" = "" },
-        { "name" = "SNOWFLAKE_DEFAULT_SCHEMA", "value" = "" },
-        { "name" = "SNOWFLAKE_WAREHOUSE", "value" = "" }
+        { "name" = "SNOWFLAKE_ROLE", "valueFrom" = "${aws_ssm_parameter.snowflake_dbt_role.arn}" }
       ]
 
       logConfiguration = {
