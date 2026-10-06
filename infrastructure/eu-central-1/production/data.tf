@@ -14,3 +14,8 @@ data "aws_ssm_parameter" "snowflake_airflow_user" {
   name            = aws_ssm_parameter.snowflake_airflow_user_password.name
   with_decryption = true
 }
+
+data "aws_ssm_parameter" "snowflake_dbt_user" {
+  name            = aws_ssm_parameter.snowflake_dbt_user_password.name
+  with_decryption = true
+}

@@ -32,3 +32,10 @@ resource "aws_ssm_parameter" "snowflake_airflow_user_password" {
   value_wo         = random_password.snowflake_airflow_password.result
   value_wo_version = 1
 }
+
+resource "aws_ssm_parameter" "snowflake_dbt_user_password" {
+  name             = "/production/forge/achs/snowflake/dbt_user_password"
+  type             = "SecureString"
+  value_wo         = random_password.snowflake_dbt_password.result
+  value_wo_version = 1
+}
