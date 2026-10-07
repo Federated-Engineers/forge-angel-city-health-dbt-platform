@@ -75,7 +75,15 @@ resource "snowflake_grant_privileges_to_account_role" "lnd_select_insert" {
   }
 }
 
+# Grant Transformation Role Privileges
+
+# Grant Roles to Users
 resource "snowflake_grant_account_role" "grant_role_to_user" {
   role_name = snowflake_account_role.data_ingestion.name
   user_name = snowflake_user.airflow.name
+}
+
+resource "snowflake_grant_account_role" "grant_data_transform_role_to_dbt_user" {
+  role_name = snowflake_account_role.data_transformation.name
+  user_name = snowflake_user.dbt.name
 }
