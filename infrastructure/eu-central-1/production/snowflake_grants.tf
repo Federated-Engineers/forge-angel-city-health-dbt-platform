@@ -1,6 +1,11 @@
+# Grants Usage Priviledge on the ACHS_PROD_DB to Data Ingestion and Data Transformation Roles
 resource "snowflake_grant_privileges_to_account_role" "database_usage" {
-  account_role_name = snowflake_account_role.data_ingestion.name
+  account_role_name = each.key
   privileges        = ["USAGE"]
+  for_each = toset([
+    snowflake_account_role.data_ingestion.name,
+    snowflake_account_role.data_transformation.name
+  ])
 
   on_account_object {
     object_type = "DATABASE"
@@ -8,10 +13,14 @@ resource "snowflake_grant_privileges_to_account_role" "database_usage" {
   }
 }
 
-# USAGE on the warehouse
+# Grants Usage Priviledge on the ACHS Warehouse to Data Ingestion and Data Transformation Roles
 resource "snowflake_grant_privileges_to_account_role" "warehouse_usage" {
-  account_role_name = snowflake_account_role.data_ingestion.name
+  account_role_name = each.key
   privileges        = ["USAGE"]
+  for_each = toset([
+    snowflake_account_role.data_ingestion.name,
+    snowflake_account_role.data_transformation.name
+  ])
 
   on_account_object {
     object_type = "WAREHOUSE"
@@ -20,8 +29,12 @@ resource "snowflake_grant_privileges_to_account_role" "warehouse_usage" {
 }
 
 resource "snowflake_grant_privileges_to_account_role" "schema_usage" {
-  account_role_name = snowflake_account_role.data_ingestion.name
+  account_role_name = each.key
   privileges        = ["USAGE"]
+  for_each = toset([
+    snowflake_account_role.data_ingestion.name,
+    snowflake_account_role.data_transformation.name
+  ])
 
   on_schema {
     schema_name = module.achs_prod_landing_schema.snowflake_fully_qualified_schema_name
