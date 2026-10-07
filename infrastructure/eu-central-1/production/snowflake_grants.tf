@@ -99,6 +99,27 @@ resource "snowflake_grant_privileges_to_account_role" "lnd_transformation_select
   }
 }
 
+resource "snowflake_grant_privileges_to_account_role" "stg_read_write" {
+  account_role_name = snowflake_account_role.data_transformation.name
+  privileges        = ["SELECT", "INSERT", "UPDATE"]
+
+  on_schema_object {
+    future {
+      object_type_plural = "TABLES"
+      in_schema          = module.achs_prod_staging_schema.snowflake_fully_qualified_schema_name
+    }
+  }
+}
+
+resource "snowflake_grant_privileges_to_account_role" "stg_create_table_n_view" {
+  account_role_name = snowflake_account_role.data_transformation.name
+  privileges        = ["CREATE TABLE", "CREATE VIEW"]
+  on_schema {
+    schema_name = module.achs_prod_staging_schema.snowflake_fully_qualified_schema_name
+  }
+}
+
+
 # Grant Roles to Users
 resource "snowflake_grant_account_role" "grant_role_to_user" {
   role_name = snowflake_account_role.data_ingestion.name
