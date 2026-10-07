@@ -55,12 +55,23 @@ resource "snowflake_grant_privileges_to_account_role" "file_format_usage" {
   }
 }
 
-resource "snowflake_grant_privileges_to_account_role" "claims_lnd_select_insert" {
+locals {
+  landing_tables = tomap({
+    claims     = snowflake_table.claims_lnd_table.fully_qualified_name,
+    encounters = snowflake_table.encounters_lnd_table.fully_qualified_name,
+    providers  = snowflake_table.providers_lnd_table.fully_qualified_name,
+    patients   = snowflake_table.patients_lnd_table.fully_qualified_name,
+    diagnoses  = snowflake_table.diagnoses_lnd_table.fully_qualified_name
+  })
+}
+
+resource "snowflake_grant_privileges_to_account_role" "lnd_select_insert" {
   account_role_name = snowflake_account_role.data_ingestion.name
   privileges        = ["SELECT", "INSERT"]
+  for_each          = local.landing_tables
   on_schema_object {
     object_type = "TABLE"
-    object_name = snowflake_table.claims_lnd_table.fully_qualified_name
+    object_name = each.value
   }
 }
 
