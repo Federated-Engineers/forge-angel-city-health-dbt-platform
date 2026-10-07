@@ -89,6 +89,15 @@ resource "snowflake_grant_privileges_to_account_role" "lnd_select_insert" {
 }
 
 # Grant Transformation Role Privileges
+resource "snowflake_grant_privileges_to_account_role" "lnd_transformation_select" {
+  account_role_name = snowflake_account_role.data_transformation.name
+  privileges        = ["SELECT"]
+  for_each          = local.landing_tables
+  on_schema_object {
+    object_type = "TABLE"
+    object_name = each.value
+  }
+}
 
 # Grant Roles to Users
 resource "snowflake_grant_account_role" "grant_role_to_user" {
