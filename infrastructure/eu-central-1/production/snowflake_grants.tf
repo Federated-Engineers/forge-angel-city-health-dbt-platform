@@ -41,6 +41,18 @@ resource "snowflake_grant_privileges_to_account_role" "schema_usage" {
   }
 }
 
+resource "snowflake_grant_privileges_to_account_role" "staging_schema_usage" {
+  account_role_name = each.key
+  privileges        = ["USAGE"]
+  for_each = toset([
+    snowflake_account_role.data_transformation.name
+  ])
+
+  on_schema {
+    schema_name = module.achs_prod_staging_schema.snowflake_fully_qualified_schema_name
+  }
+}
+
 resource "snowflake_grant_privileges_to_account_role" "stage_read" {
   account_role_name = snowflake_account_role.data_ingestion.name
   privileges        = ["READ"]
