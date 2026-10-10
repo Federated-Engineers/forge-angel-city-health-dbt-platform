@@ -33,4 +33,6 @@ models:
   angel_city_health_systems:
     # Config indicated by + and applies to all files under models/example/
     staging:
-      +materialized: view
+      +enabled: true
+      +materialized: table
+      +schema: STAGING_SCHEMA
