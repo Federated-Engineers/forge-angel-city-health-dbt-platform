@@ -4,15 +4,15 @@ run-name: >-
   DBT Deployment triggered on ${{ github.event_name }} event by @${{ github.actor }}.
 
 on:
-  pull_request:
-    branches:
-      - main
   push:
     branches:
+      - main
+      - dev
       - snowflake-infra
-    # paths:
-    #   - 'angel_city_health_systems/**'
-    #   - 'Dockerfile.dbt'
+    paths:
+      - 'angel_city_health_systems/**'
+      - 'Dockerfile.dbt'
+      - 'profiles.yml'
 
 permissions:
   id-token: write
