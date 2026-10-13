@@ -13,7 +13,7 @@ on:
       - 'angel_city_health_systems/**'
       - 'Dockerfile.dbt'
       - 'profiles.yml'
-      - '/github/workflows/ecr_deployment.yaml'
+      - '.github/workflows/ecr_deployment.yaml'
 
 permissions:
   id-token: write
