@@ -1,0 +1,13 @@
+angel_city_health_systems:
+  target: prod
+  outputs:
+    prod:
+      type: snowflake
+      account: "{{ env_var('SNOWFLAKE_ORGANIZATION_NAME') }}-{{ env_var('SNOWFLAKE_ACCOUNT_NAME') }}"
+      user: "{{ env_var('SNOWFLAKE_USER') }}"
+      password: "{{ env_var('SNOWFLAKE_PASSWORD') }}"
+      database: "{{ env_var('SNOWFLAKE_DEFAULT_DATABASE') }}"
+      schema: "{{ env_var('SNOWFLAKE_DEFAULT_SCHEMA') }}"
+      warehouse: "{{ env_var('SNOWFLAKE_WAREHOUSE') }}"
+      role: "{{ env_var('SNOWFLAKE_ROLE') }}"
+      threads: 5

@@ -1,1 +1,38 @@
 # forge-angel-city-health-dbt-platform
+
+# Continous Integrationa and Delivery
+## CI
+## CD
+
+# Setup Snowflake User for Terraform
+
+
+```sql
+USE ROLE ACCOUNTADMIN;
+
+CREATE OR REPLACE ROLE INFRA_SETUP
+COMMENT = 'This role is used for setting up infrastructure entities (Workspace, Compute, Database e.t.c), creating users, setup RBAC, e.t.c.';
+
+GRANT 
+    CREATE DATABASE, CREATE WAREHOUSE, CREATE STORAGE INTEGRATION,
+    CREATE ROLE, CREATE USER, MANAGE GRANTS
+ON ACCOUNT TO ROLE INFRA_SETUP;
+
+GRANT USAGE ON INTEGRATION <your_integration_name> TO ROLE <terraform_role>;
+
+GRANT CREATE SCHEMA ON DATABASE ACHS_PROD_DB TO ROLE INFRA_SETUP;
+
+GRANT USAGE, CREATE STAGE ON ALL SCHEMAS IN DATABASE ACHS_PROD_DB TO ROLE INFRA_SETUP;
+GRANT USAGE, CREATE STAGE ON FUTURE SCHEMAS IN DATABASE ACHS_PROD_DB TO ROLE INFRA_SETUP;
+
+CREATE OR REPLACE USER TERRAFORM_SVC
+    TYPE = SERVICE
+    AUTOCOMMIT = FALSE
+    COMMENT = "Service user for Terraforming Snowflake"
+    RSA_PUBLIC_KEY = "<YOUR PUBLIC KEY HERE>"
+WITH TAG (
+    "terraform:service_user" = "true"
+);
+
+GRANT ROLE INFRA_SETUP TO USER TERRAFORM_SVC;
+```

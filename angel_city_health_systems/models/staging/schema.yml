@@ -1,0 +1,23 @@
+
+version: 2
+
+models:
+  - name: stg_claims
+    description: "A starter dbt model"
+    config:
+      schema: STAGING_SCHEMA
+    columns:
+      - name: id
+        description: "The primary key for this table"
+        data_tests:
+          - unique
+          - not_null
+
+  # - name: my_second_dbt_model
+  #   description: "A starter dbt model"
+  #   columns:
+  #     - name: id
+  #       description: "The primary key for this table"
+  #       data_tests:
+  #         - unique
+  #         - not_null
