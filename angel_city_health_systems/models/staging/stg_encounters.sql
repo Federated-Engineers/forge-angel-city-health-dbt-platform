@@ -1,19 +1,12 @@
-
-WITH source AS (
-    SELECT
-        *
-    FROM ACHS_PROD_DB.LANDING_SCHEMA.ENCOUNTERS_LND
-)
-
 SELECT
-    TRIM(RAW_DATA:encounter_id, '"') ENCOUNTER_ID,
-    TRIM(RAW_DATA:patient_id, '"') PATIENT_ID,
-    TRIM(RAW_DATA:provider_id, '"') PROVIDER_ID,
-    TRIM(RAW_DATA:admission_source, '"') ADMISSION_SOURCE,
-    TRIM(RAW_DATA:encounterClass, '"') ENOUNTER_CLASS,
-    TRIM(RAW_DATA:encounter_start_timestamp, '"') ENCOUNTER_START_TIMESTAMP,
-    TRIM(RAW_DATA:encounter_end_timestamp, '"') ENCOUNTER_END_TIMESTAMP,
-    SOURCE_FILE,
-    FILE_ROW_NUMBER,
-    LOADED_AT_TIMESTAMP
-FROM source
+    source_file,
+    file_row_number,
+    loaded_at_timestamp,
+    TRIM(raw_data:encounter_id, '"') AS encounter_id,
+    TRIM(raw_data:patient_id, '"') AS patient_id,
+    TRIM(raw_data:provider_id, '"') AS provider_id,
+    TRIM(raw_data:admission_source, '"') AS admission_source,
+    TRIM(raw_data:encounterClass, '"') AS enounter_class,
+    TRIM(raw_data:encounter_start_timestamp, '"') AS encounter_start_timestamp,
+    TRIM(raw_data:encounter_end_timestamp, '"') AS encounter_end_timestamp
+FROM achs_prod_db.landing_schema.encounters_lnd

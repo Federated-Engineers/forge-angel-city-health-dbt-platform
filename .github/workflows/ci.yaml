@@ -5,9 +5,12 @@ run-name: >-
 
 on:
   push:
-    branches: [main, Temiloluwa/CI-Setup]
+    branches:
+      - main
+      - dev
   pull_request:
-    branches: [main]
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:
@@ -39,5 +42,5 @@ jobs:
           pip install -r requirements-dev.txt
       - name: SQLFluff Linting
         run: |
-          sqlfluff lint --dialect snowflake angel_city_health_systems/models
+          sqlfluff lint angel_city_health_systems/
       # No Python files in repo, flake8 and isort checks not needed

@@ -1,18 +1,11 @@
-
-WITH source AS (
-    SELECT
-        *
-    FROM ACHS_PROD_DB.LANDING_SCHEMA.DIAGNOSES_LND
-)
-
 SELECT
-    TRIM(RAW_DATA:diagnosis_id, '"') DIAGNOSIS_ID,
-    TRIM(RAW_DATA:encounter_id, '"') ENCOUNTER_ID,
-    TRIM(RAW_DATA:recorded_at_timestamp, '"') RECORDED_AT_TIMESTAMP,
-    TRIM(RAW_DATA:diagnosis_rank, '"') DIAGNOSES_RANK,
-    TRIM(RAW_DATA:icd_10_code, '"') ICD_10_RANK,
-    TRIM(RAW_DATA:coding_system, '"') CODING_SYSTEM,
-    SOURCE_FILE,
-    FILE_ROW_NUMBER,
-    LOADED_AT_TIMESTAMP
-FROM source
+    source_file,
+    file_row_number,
+    loaded_at_timestamp,
+    TRIM(raw_data:diagnosis_id, '"') AS diagnosis_id,
+    TRIM(raw_data:encounter_id, '"') AS encounter_id,
+    TRIM(raw_data:recorded_at_timestamp, '"') AS recorded_at_timestamp,
+    TRIM(raw_data:diagnosis_rank, '"') AS diagnoses_rank,
+    TRIM(raw_data:icd_10_code, '"') AS icd_10_rank,
+    TRIM(raw_data:coding_system, '"') AS coding_system
+FROM achs_prod_db.landing_schema.diagnoses_lnd
