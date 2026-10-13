@@ -1,0 +1,19 @@
+[sqlfluff]
+dialect = snowflake
+templater = dbt
+encoding = utf-8
+
+[sqlfluff:templater:dbt]
+project_dir = ./angel_city_health_systems
+profiles_dir = ~/.dbt
+profile = angel_city_health_systems
+target = prod
+
+[sqlfluff:templater:jinja]
+apply_dbt_builtins = True
+
+[sqlfluff:indentation]
+tab_space_size = 2
+
+[sqlfluff:rules:capitalisation.keywords]
+capitalisation_policy = upper
