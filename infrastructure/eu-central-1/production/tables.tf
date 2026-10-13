@@ -22,6 +22,12 @@ resource "snowflake_table" "claims_lnd_table" {
   }
 
   column {
+    name     = "LOGICAL_LOAD_DATE"
+    type     = "date"
+    nullable = false
+  }
+
+  column {
     name     = "LOADED_AT_TIMESTAMP"
     type     = "timestamp_ntz"
     nullable = false
@@ -48,6 +54,12 @@ resource "snowflake_table" "diagnoses_lnd_table" {
   column {
     name     = "FILE_ROW_NUMBER"
     type     = "bigint"
+    nullable = false
+  }
+
+  column {
+    name     = "LOGICAL_LOAD_DATE"
+    type     = "date"
     nullable = false
   }
 
@@ -82,6 +94,12 @@ resource "snowflake_table" "encounters_lnd_table" {
   }
 
   column {
+    name     = "LOGICAL_LOAD_DATE"
+    type     = "date"
+    nullable = false
+  }
+
+  column {
     name     = "LOADED_AT_TIMESTAMP"
     type     = "timestamp_ntz"
     nullable = false
@@ -112,6 +130,12 @@ resource "snowflake_table" "patients_lnd_table" {
   }
 
   column {
+    name     = "LOGICAL_LOAD_DATE"
+    type     = "date"
+    nullable = false
+  }
+
+  column {
     name     = "LOADED_AT_TIMESTAMP"
     type     = "timestamp_ntz"
     nullable = false
@@ -138,6 +162,12 @@ resource "snowflake_table" "providers_lnd_table" {
   column {
     name     = "FILE_ROW_NUMBER"
     type     = "bigint"
+    nullable = false
+  }
+
+  column {
+    name     = "LOGICAL_LOAD_DATE"
+    type     = "date"
     nullable = false
   }
 
