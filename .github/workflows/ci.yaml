@@ -11,7 +11,6 @@ on:
   pull_request:
     branches:
       - main
-  workflow_dispatch:
 
 permissions:
   contents: read
@@ -43,4 +42,3 @@ jobs:
       - name: SQLFluff Linting
         run: |
           sqlfluff lint angel_city_health_systems/
-      # No Python files in repo, flake8 and isort checks not needed
