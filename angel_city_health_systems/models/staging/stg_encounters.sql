@@ -9,4 +9,5 @@ SELECT
     TRIM(raw_data:encounterClass, '"') AS enounter_class,
     TRIM(raw_data:encounter_start_timestamp, '"') AS encounter_start_timestamp,
     TRIM(raw_data:encounter_end_timestamp, '"') AS encounter_end_timestamp
-FROM achs_prod_db.landing_schema.encounters_lnd
+FROM {{ source('landing', 'ENCOUNTERS_LND') }}
+WHERE logical_load_date = '{{ var("logical_load_date") }}'

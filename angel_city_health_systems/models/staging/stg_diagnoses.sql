@@ -8,4 +8,5 @@ SELECT
     TRIM(raw_data:diagnosis_rank, '"') AS diagnoses_rank,
     TRIM(raw_data:icd_10_code, '"') AS icd_10_rank,
     TRIM(raw_data:coding_system, '"') AS coding_system
-FROM achs_prod_db.landing_schema.diagnoses_lnd
+FROM {{ source('landing', 'DIAGNOSES_LND') }}
+WHERE logical_load_date = '{{ var("logical_load_date") }}'

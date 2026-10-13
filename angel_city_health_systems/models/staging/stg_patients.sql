@@ -15,4 +15,5 @@ SELECT
     TRIM(
         raw_data:contact_info:residential_zip_code, '"'
     ) AS residential_zip_code
-FROM achs_prod_db.landing_schema.patients_lnd
+FROM {{ source('landing', 'PATIENTS_LND') }}
+WHERE logical_load_date = '{{ var("logical_load_date") }}'

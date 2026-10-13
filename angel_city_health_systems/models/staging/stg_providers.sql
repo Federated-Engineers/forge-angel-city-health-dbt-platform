@@ -8,4 +8,5 @@ SELECT
     TRIM(raw_data:provider_id, '"') AS provider_id,
     TRIM(raw_data:provider_type, '"') AS provider_type,
     TRIM(raw_data:specialty_code, '"') AS speciality_code
-FROM achs_prod_db.landing_schema.providers_lnd
+FROM {{ source('landing', 'PROVIDERS_LND') }}
+WHERE logical_load_date = '{{ var("logical_load_date") }}'

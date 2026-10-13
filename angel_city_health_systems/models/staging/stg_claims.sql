@@ -18,4 +18,5 @@ SELECT
         raw_data:adjudication:processed_date, '"'
     ) AS adjudication_processed_date,
     raw_data:adjudication:reimbursement_rate AS adjudication_reimbursment_rate
-FROM source
+FROM {{ source('landing', 'CLAIMS_LND') }}
+WHERE logical_load_date = '{{ var("logical_load_date") }}'
