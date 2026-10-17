@@ -11,3 +11,10 @@ module "achs_prod_staging_schema" {
   schema_name   = "STAGING_SCHEMA"
   comment       = "Staging zone for Angel City Health System's Data"
 }
+
+module "achs_prod_mart_schema" {
+  source        = "../../modules/schema"
+  database_name = module.achs_production_database.snowflake_database_name
+  schema_name   = "MART"
+  comment       = "Mart zone for Angel City Health System's Data"
+}

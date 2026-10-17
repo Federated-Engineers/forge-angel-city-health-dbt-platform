@@ -1,4 +1,6 @@
 name: Terraform CI
+run-name: >-
+  Terraform CI triggered on ${{ github.event_name }} event by @${{ github.actor }}.
 
 on:
   pull_request:
