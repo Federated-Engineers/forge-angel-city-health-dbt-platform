@@ -1,15 +1,10 @@
-resource "aws_vpc" "dbt_core" {
-  cidr_block           = "10.0.0.0/16"
-  enable_dns_hostnames = true
-  enable_dns_support   = true
-
-  tags = {
-    "Name" : "dbt_core_vpc"
-  }
+data "aws_vpc" "default_vpc" {
+  default = true
+  region  = "eu-central-1"
 }
 
 resource "aws_subnet" "dbt_core_subnet" {
-  vpc_id            = aws_vpc.dbt_core.id
+  vpc_id            = data.aws_vpc.default_vpc.id
   cidr_block        = "10.0.0.0/20"
   availability_zone = "eu-central-1a"
 
@@ -21,11 +16,11 @@ resource "aws_subnet" "dbt_core_subnet" {
 resource "aws_security_group" "dbt_core_sg" {
   name        = "dbt_core_sg"
   description = "Security group for dbt core vpc"
-  vpc_id      = aws_vpc.dbt_core.id
+  vpc_id      = data.aws_vpc.default_vpc.id
 }
 
 resource "aws_internet_gateway" "dbt_core_igw" {
-  vpc_id = aws_vpc.dbt_core.id
+  vpc_id = data.aws_vpc.default_vpc.id
 
   tags = {
     Name = "dbt_core_igw"
@@ -33,7 +28,7 @@ resource "aws_internet_gateway" "dbt_core_igw" {
 }
 
 resource "aws_route" "route_to_internet" {
-  route_table_id         = aws_vpc.dbt_core.main_route_table_id
+  route_table_id         = data.aws_vpc.default_vpc.main_route_table_id
   destination_cidr_block = "0.0.0.0/0"
   gateway_id             = aws_internet_gateway.dbt_core_igw.id
 }
