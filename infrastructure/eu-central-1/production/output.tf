@@ -3,7 +3,7 @@ output "github_action_oidc_role_arn" {
 }
 
 output "dbt_core_vpc_id" {
-  value = aws_vpc.dbt_core.id
+  value = data.aws_vpc.default_vpc.id
 }
 
 output "dbt_core_subnet_id" {
