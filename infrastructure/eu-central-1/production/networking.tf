@@ -5,7 +5,7 @@ data "aws_vpc" "default_vpc" {
 
 resource "aws_subnet" "dbt_core_subnet" {
   vpc_id            = data.aws_vpc.default_vpc.id
-  cidr_block        = "172.31.32.0/20"
+  cidr_block        = "172.31.48.0/20"
   availability_zone = "eu-central-1a"
 
   tags = {
