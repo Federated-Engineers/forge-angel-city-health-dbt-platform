@@ -1,0 +1,30 @@
+name: Terraform CI
+run-name: >-
+  Terraform CI triggered on ${{ github.event_name }} event by @${{ github.actor }}.
+
+on:
+  pull_request:
+    paths:
+      - "infrastructure/**"
+
+jobs:
+  terraform:
+    runs-on: ubuntu-24.04
+
+    defaults:
+      run:
+        working-directory: infrastructure/eu-central-1/production
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+
+      - name: terraform fmt
+        uses: dflook/terraform-fmt-check@v1
+        with:
+          path: ./infrastructure/eu-central-1/production
+
+      - name: terraform validate
+        uses: dflook/terraform-validate@v2
+        with:
+          path: ./infrastructure/eu-central-1/production

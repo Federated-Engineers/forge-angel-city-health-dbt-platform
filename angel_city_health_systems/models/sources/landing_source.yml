@@ -1,0 +1,24 @@
+version: 2
+
+sources:
+  - name: landing
+    description: Tables where the Landing data (JSON) is loaded into from the S3 Source.
+
+    database: ACHS_PROD_DB
+    schema: LANDING_SCHEMA
+
+    tables:
+      - name: CLAIMS_LND
+        description: Claims Landing Table
+
+      - name: DIAGNOSES_LND
+        description: Diagnoses Landing Table
+
+      - name: ENCOUNTERS_LND
+        description: Encounters Landing Table
+
+      - name: PATIENTS_LND
+        description: Patients Landing Table
+
+      - name: PROVIDERS_LND
+        description: Providers Landing Table
